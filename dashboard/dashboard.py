@@ -7,13 +7,13 @@ import numpy as np
 # Function to load data
 def load_data():
     try:
-        order_items_df = pd.read_csv('order_items.csv')
-        products_df = pd.read_csv('products_items.csv')
-        orders_df = pd.read_csv('orders.csv')
-        product_category_df = pd.read_csv('product_category.csv')
-        order_review_df = pd.read_csv('order_review.csv')
-        customers_df = pd.read_csv('customers.csv')
-        sellers_df = pd.read_csv('sellers.csv')
+        order_items_df = pd.read_csv('dashboard/order_items.csv')
+        products_df = pd.read_csv('dashboard/products_items.csv')
+        orders_df = pd.read_csv('dashboard/orders.csv')
+        product_category_df = pd.read_csv('dashboard/product_category.csv')
+        order_review_df = pd.read_csv('dashboard/order_review.csv')
+        customers_df = pd.read_csv('dashboard/customers.csv')
+        sellers_df = pd.read_csv('dashboard/sellers.csv')
 
         return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
     except FileNotFoundError as e:
