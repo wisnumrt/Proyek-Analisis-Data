@@ -8,36 +8,34 @@ import os
 def load_data():
     try:
         base_path = os.path.dirname(os.path.abspath(__file__))
-        order_items_df = pd.read_csv(os.path.join(base_path, 'order_items.csv'))
-        # Lakukan hal yang sama untuk file CSV lainnya
+        data_path = os.path.join(base_path, '..', 'data')  # Asumsi folder data ada satu level di atas
+
+        order_items_df = pd.read_csv(os.path.join(data_path, 'order_items.csv'))
+        products_df = pd.read_csv(os.path.join(data_path, 'products.csv'))
+        orders_df = pd.read_csv(os.path.join(data_path, 'orders.csv'))
+        product_category_df = pd.read_csv(os.path.join(data_path, 'product_category.csv'))
+        order_review_df = pd.read_csv(os.path.join(data_path, 'order_review.csv'))
+        customers_df = pd.read_csv(os.path.join(data_path, 'customers.csv'))
+        sellers_df = pd.read_csv(os.path.join(data_path, 'sellers.csv'))
+
         return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
+    
     except FileNotFoundError as e:
-        st.error(f"File tidak ditemukan: {e}")
-        st.write(f"Direktori saat ini: {os.getcwd()}")
-        st.write(f"Isi direktori: {os.listdir()}")
+        print(f"File tidak ditemukan: {e}")
+        print(f"Direktori saat ini: {os.getcwd()}")
+        print(f"Isi direktori data: {os.listdir(data_path)}")
+        return None, None, None, None, None, None, None
+    except Exception as e:
+        print(f"Terjadi error: {e}")
         return None, None, None, None, None, None, None
 
-# Pada bagian utama script
+# Load data
 data = load_data()
 if all(df is not None for df in data):
     order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df = data
-    # Lanjutkan dengan analisis data
 else:
-    st.stop() 
-
-def load_data():
-    order_items_df = pd.read_csv('order_items.csv')
-    products_df = pd.read_csv('products_items.csv')
-    orders_df = pd.read_csv('orders.csv')
-    product_category_df = pd.read_csv('product_category.csv')
-    order_review_df = pd.read_csv('order_review.csv')
-    customers_df = pd.read_csv('customers.csv')
-    sellers_df = pd.read_csv('sellers.csv')
-    
-    return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
-
-# Load data
-order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df = load_data()
+    st.error("Terjadi kesalahan saat memuat data. Silakan periksa log untuk detailnya.")
+    st.stop()
 
 # Streamlit app
 st.title('E-commerce Dashboard')
