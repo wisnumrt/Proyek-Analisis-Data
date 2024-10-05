@@ -7,32 +7,57 @@ import os
 
 def load_data():
     try:
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        data_path = os.path.join(base_path, '..', 'data')  # Asumsi folder data ada satu level di atas
-
-        order_items_df = pd.read_csv(os.path.join(data_path, 'order_items.csv'))
-        products_df = pd.read_csv(os.path.join(data_path, 'products.csv'))
-        orders_df = pd.read_csv(os.path.join(data_path, 'orders.csv'))
-        product_category_df = pd.read_csv(os.path.join(data_path, 'product_category.csv'))
-        order_review_df = pd.read_csv(os.path.join(data_path, 'order_review.csv'))
-        customers_df = pd.read_csv(os.path.join(data_path, 'customers.csv'))
-        sellers_df = pd.read_csv(os.path.join(data_path, 'sellers.csv'))
-
-        return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
+        # Coba beberapa kemungkinan lokasi untuk direktori data
+        possible_data_paths = [
+            os.path.join(os.getcwd(), 'data'),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data'),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'),
+            '/mount/src/proyek-analisis-data/data'
+        ]
+        
+        data_path = next((path for path in possible_data_paths if os.path.exists(path)), None)
+        
+        if data_path is None:
+            raise FileNotFoundError("Tidak dapat menemukan direktori data")
+        
+        print(f"Menggunakan direktori data: {data_path}")
+        
+        # Load semua CSV files
+        csv_files = {
+            'order_items': 'order_items.csv',
+            'products': 'products.csv',
+            'orders': 'orders.csv',
+            'product_category': 'product_category.csv',
+            'order_review': 'order_review.csv',
+            'customers': 'customers.csv',
+            'sellers': 'sellers.csv'
+        }
+        
+        dataframes = {}
+        for key, filename in csv_files.items():
+            file_path = os.path.join(data_path, filename)
+            if not os.path.exists(file_path):
+                print(f"File tidak ditemukan: {file_path}")
+                return None
+            dataframes[key] = pd.read_csv(file_path)
+        
+        return dataframes
     
-    except FileNotFoundError as e:
-        print(f"File tidak ditemukan: {e}")
-        print(f"Direktori saat ini: {os.getcwd()}")
-        print(f"Isi direktori data: {os.listdir(data_path)}")
-        return None, None, None, None, None, None, None
     except Exception as e:
         print(f"Terjadi error: {e}")
-        return None, None, None, None, None, None, None
+        return None
 
 # Load data
 data = load_data()
-if all(df is not None for df in data):
-    order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df = data
+if data is not None:
+    st.success("Data berhasil dimuat!")
+    order_items_df = data['order_items']
+    products_df = data['products']
+    orders_df = data['orders']
+    product_category_df = data['product_category']
+    order_review_df = data['order_review']
+    customers_df = data['customers']
+    sellers_df = data['sellers']
 else:
     st.error("Terjadi kesalahan saat memuat data. Silakan periksa log untuk detailnya.")
     st.stop()
