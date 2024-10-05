@@ -6,35 +6,25 @@ import numpy as np
 
 # Function to load data
 def load_data():
-    st.sidebar.header("Upload CSV Files")
-    
-    order_items_file = st.sidebar.file_uploader("Upload order_items.csv", type=["csv"])
-    products_file = st.sidebar.file_uploader("Upload products_items.csv", type=["csv"])
-    orders_file = st.sidebar.file_uploader("Upload orders.csv", type=["csv"])
-    product_category_file = st.sidebar.file_uploader("Upload product_category.csv", type=["csv"])
-    order_review_file = st.sidebar.file_uploader("Upload order_review.csv", type=["csv"])
-    customers_file = st.sidebar.file_uploader("Upload customers.csv", type=["csv"])
-    sellers_file = st.sidebar.file_uploader("Upload sellers.csv", type=["csv"])
-
-    if order_items_file and products_file and orders_file and product_category_file and order_review_file and customers_file and sellers_file:
-        order_items_df = pd.read_csv(order_items_file)
-        products_df = pd.read_csv(products_file)
-        orders_df = pd.read_csv(orders_file)
-        product_category_df = pd.read_csv(product_category_file)
-        order_review_df = pd.read_csv(order_review_file)
-        customers_df = pd.read_csv(customers_file)
-        sellers_df = pd.read_csv(sellers_file)
+    try:
+        order_items_df = pd.read_csv('order_items.csv')
+        products_df = pd.read_csv('products_items.csv')
+        orders_df = pd.read_csv('orders.csv')
+        product_category_df = pd.read_csv('product_category.csv')
+        order_review_df = pd.read_csv('order_review.csv')
+        customers_df = pd.read_csv('customers.csv')
+        sellers_df = pd.read_csv('sellers.csv')
 
         return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
-    else:
-        st.warning("Please upload all the required CSV files.")
+    except FileNotFoundError as e:
+        st.error(f"File not found: {e.filename}. Please make sure all CSV files are present in the same directory as this script.")
         return None, None, None, None, None, None, None
 
 # Load data
 order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df = load_data()
 
 # Check if all data is loaded before displaying anything
-if order_items_df is not None:
+if order_items_df is not None and products_df is not None and orders_df is not None:
     # Streamlit app
     st.title('E-commerce Dashboard')
 
@@ -168,4 +158,4 @@ if order_items_df is not None:
         st.pyplot(fig)
 
 else:
-    st.warning("Waiting for files to be uploaded.")
+    st.warning("Please make sure all required CSV files are available.")
