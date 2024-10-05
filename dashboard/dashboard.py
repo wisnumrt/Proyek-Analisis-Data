@@ -3,64 +3,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import os
 
 def load_data():
-    try:
-        # Coba beberapa kemungkinan lokasi untuk direktori data
-        possible_data_paths = [
-            os.path.join(os.getcwd(), 'data'),
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data'),
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'),
-            '/mount/src/proyek-analisis-data/data'
-        ]
-        
-        data_path = next((path for path in possible_data_paths if os.path.exists(path)), None)
-        
-        if data_path is None:
-            raise FileNotFoundError("Tidak dapat menemukan direktori data")
-        
-        print(f"Menggunakan direktori data: {data_path}")
-        
-        # Load semua CSV files
-        csv_files = {
-            'order_items': 'order_items.csv',
-            'products': 'products.csv',
-            'orders': 'orders.csv',
-            'product_category': 'product_category.csv',
-            'order_review': 'order_review.csv',
-            'customers': 'customers.csv',
-            'sellers': 'sellers.csv'
-        }
-        
-        dataframes = {}
-        for key, filename in csv_files.items():
-            file_path = os.path.join(data_path, filename)
-            if not os.path.exists(file_path):
-                print(f"File tidak ditemukan: {file_path}")
-                return None
-            dataframes[key] = pd.read_csv(file_path)
-        
-        return dataframes
+    order_items_df = pd.read_csv('order_items.csv')
+    products_df = pd.read_csv('products_items.csv')
+    orders_df = pd.read_csv('orders.csv')
+    product_category_df = pd.read_csv('product_category.csv')
+    order_review_df = pd.read_csv('order_review.csv')
+    customers_df = pd.read_csv('customers.csv')
+    sellers_df = pd.read_csv('sellers.csv')
     
-    except Exception as e:
-        print(f"Terjadi error: {e}")
-        return None
+    return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
 
 # Load data
-data = load_data()
-if data is not None:
-    st.success("Data berhasil dimuat!")
-    order_items_df = data['order_items']
-    products_df = data['products']
-    orders_df = data['orders']
-    product_category_df = data['product_category']
-    order_review_df = data['order_review']
-    customers_df = data['customers']
-    sellers_df = data['sellers']
-else:
-    st.error("Terjadi kesalahan saat memuat data. Silakan periksa log untuk detailnya.")
-    st.stop()
+order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df = load_data()
 
 # Streamlit app
 st.title('E-commerce Dashboard')
@@ -195,5 +151,5 @@ elif page == 'Top 5 Sellers':
     st.pyplot(fig)
 
 # Run the Streamlit app
-if __name__ == '__main__':
+if _name_ == '_main_':
     st.sidebar.info('Select a page from the radio button above.')
