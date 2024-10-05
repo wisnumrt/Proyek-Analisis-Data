@@ -3,8 +3,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import os
 
-# Function to load data
+def load_data():
+    try:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        order_items_df = pd.read_csv(os.path.join(base_path, 'order_items.csv'))
+        # Lakukan hal yang sama untuk file CSV lainnya
+        return order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df
+    except FileNotFoundError as e:
+        st.error(f"File tidak ditemukan: {e}")
+        st.write(f"Direktori saat ini: {os.getcwd()}")
+        st.write(f"Isi direktori: {os.listdir()}")
+        return None, None, None, None, None, None, None
+
+# Pada bagian utama script
+data = load_data()
+if all(df is not None for df in data):
+    order_items_df, products_df, orders_df, product_category_df, order_review_df, customers_df, sellers_df = data
+    # Lanjutkan dengan analisis data
+else:
+    st.stop() 
+
 def load_data():
     order_items_df = pd.read_csv('order_items.csv')
     products_df = pd.read_csv('products_items.csv')
